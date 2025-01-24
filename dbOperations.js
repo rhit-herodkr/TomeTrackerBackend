@@ -1,27 +1,15 @@
-// var config=require('./dbConfig');
-//  const sql=require('msnodesqlv8');
-//  const query="select * from Card";
-//  async function getLoginDetails(){
-//   try {
-//    sql.query(config,query,(err,rows)=>{
-//     console.log("Now printing your rows...")
-//     console.log(rows);
-//    })
-//   } catch (error ) {
-//    console.log(error);
-//   }
-//  }
-//  module.exports={
-//   getLoginDetails:getLoginDetails
-//  }
-
-
 const config = require('./dbConfig');
 const sql = require('msnodesqlv8');
-// console.log("Verify the drivers are installed: ",sql.getInstalledDrivers());
 
+/**
+ * Update the follwing query variable with desired query from the database
+ */
 const query = "SELECT * FROM Book";
 
+/**
+ * 
+ * @returns 
+ */
 async function getLoginDetails() {
   return new Promise((resolve, reject) => {
     sql.query(config, query, (err, rows) => {
