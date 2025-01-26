@@ -17,8 +17,6 @@ async function getLoginDetails() {
         console.error("Error fetching data from database in dbOperations:", err);
         reject(err); // Reject the promise with the error
       } else {
-        console.log("Now printing your rows...");
-        console.log(rows); // Print rows in the console
         resolve(rows); // Resolve the promise with the rows
       }
     });
