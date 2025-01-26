@@ -1,11 +1,3 @@
-// const { reset } = require('nodemon');
-// const dboperations = require('./dbOperations');
-
-// dboperations.getLoginDetails().then(result=>{
-//  console.log("Fetching the details from your database...")
-//  console.log(result);
-// })
-
 const dboperations = require('./dbOperations');
 (async () => {
   try {
