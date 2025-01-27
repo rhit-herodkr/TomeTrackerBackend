@@ -36,6 +36,7 @@ rhit.main = async function () {
 	const response = await fetch('http://localhost:3000/api/get-books',
 		{method:'GET',headers:{'Content-Type':
 		'application/json'}});
+	//Print json out on the website
 	console.log(await response.text());
 };
 
