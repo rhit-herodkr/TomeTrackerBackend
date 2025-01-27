@@ -29,10 +29,14 @@ rhit.ClassName = class {
 
 /* Main */
 /** function and class syntax examples */
-rhit.main = function () {
+rhit.main = async function () {
 	console.log("Ready");
 
-	
+	//The call to the get-book api, formatted as a json object
+	const response = await fetch('http://localhost:3000/api/get-books',
+		{method:'GET',headers:{'Content-Type':
+		'application/json'}});
+	console.log(await response.text());
 };
 
 rhit.main();
