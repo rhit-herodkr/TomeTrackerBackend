@@ -9,24 +9,45 @@
 /** namespace. */
 var rhit = rhit || {};
 
-function htmlToElement(html) {
-	var template = document.createElement('template');
-	html = html.trim();
-	template.innerHTML = html;
-	return template.content.firstChild;
-}
+// function htmlToElement(html) {
+// 	var template = document.createElement('template');
+// 	html = html.trim();
+// 	template.innerHTML = html;
+// 	return template.content.firstChild;
+// }
 
+/**
+ * The main driver of the indexPage. Able to add and view books
+ */
 rhit.indexPageController = function () {
-
+	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
 		const result = await rhit.indexPageGetBookAPI();
-		console.log(result);
-		//const books = JSON.parse(result);
 		rhit.populateTable(result);
 	};
+
+	//Implementation of addBookButton, takes in all of the inputs and 
+	document.querySelector("#addBookButton").onclick = (event) => {
+		const title = document.querySelector("#titleInput").value;
+		const type = document.querySelector("#typeInput").value;
+		const genre = document.querySelector("#genreInput").value;
+		const isbn = document.querySelector("#isbnInput").value;
+		const pubDate = document.querySelector("#pubDateInput").value;
+		const author = document.querySelector("#AuthorInput").value;
+		
+		const object = {title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author};
+		const jsonObject = JSON.stringify(object);
+		rhit.indexPageAddBookAPI(jsonObject);
+	}
 };
 
-// Function to populate the table
+rhit.indexPageAddBookAPI = async function (jsonObject) {
+	//Call the api that is created in api.js
+	const response = await fetch('http://localhost:3000/api/add-book',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+}
+
+// Function to populate the books table
 rhit.populateTable = function (books) {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
@@ -49,6 +70,7 @@ rhit.populateTable = function (books) {
 }
 
 rhit.indexPageGetBookAPI = async function () {
+	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/get-books',
 		{
 			method: 'GET', headers: {
@@ -56,10 +78,6 @@ rhit.indexPageGetBookAPI = async function () {
 					'application/json'
 			}
 		});
-	//Print json out on the website
-	//console.log(await response.text());
-	// const toReturn = await response.text();
-	// return (toReturn)
 	return await response.json();
 
 }
@@ -68,7 +86,6 @@ rhit.indexPageGetBookAPI = async function () {
  * Determines what page you are on.
  */
 rhit.setControllers = function () {
-	console.log("Set controllers called")
 	if (document.querySelector("#indexPage")) {
 		console.log("You are on the indexPage");
 		new rhit.indexPageController();
@@ -80,16 +97,7 @@ rhit.setControllers = function () {
 rhit.main = async function () {
 	console.log("Ready");
 
-	// //The call to the get-book api, formatted as a json object
-	// const response = await fetch('http://localhost:3000/api/get-books',
-	// 	{method:'GET',headers:{'Content-Type':
-	// 	'application/json'}});
-	// //Print json out on the website
-	// console.log(await response.text());
-
-
 	rhit.setControllers();
-
 };
 
 rhit.main();
