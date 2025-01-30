@@ -9,24 +9,26 @@
 /** namespace. */
 var rhit = rhit || {};
 
-// function htmlToElement(html) {
-// 	var template = document.createElement('template');
-// 	html = html.trim();
-// 	template.innerHTML = html;
-// 	return template.content.firstChild;
-// }
+rhit.indexPageController = function() {
+	document.querySelector("#alreadyRegisteredButton").onclick = (event) => {
+		console.log("Redirecting to: /login.html");
+		window.location.href = "http://localhost:5000/login.html";
+		
+	};
+	console.log("index page active")
+}
 
 /**
- * The main driver of the indexPage. Able to add and view books
+ * The main driver of the bookViewPage. Able to add and view books
  */
-rhit.indexPageController = function () {
+rhit.bookViewPageController = function () {
 	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
-		const result = await rhit.indexPageGetBookAPI();
+		const result = await rhit.bookViewPageGetBookAPI();
 		rhit.populateTable(result);
 	};
 
-	//Implementation of addBookButton, takes in all of the inputs and 
+	//Implementation of addBookButton, takes in all of the inputs and passes them to the addBookAPI
 	document.querySelector("#addBookButton").onclick = (event) => {
 		const title = document.querySelector("#titleInput").value;
 		const type = document.querySelector("#typeInput").value;
@@ -37,11 +39,11 @@ rhit.indexPageController = function () {
 		
 		const object = {title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author};
 		const jsonObject = JSON.stringify(object);
-		rhit.indexPageAddBookAPI(jsonObject);
+		rhit.bookViewPageAddBookAPI(jsonObject);
 	}
 };
 
-rhit.indexPageAddBookAPI = async function (jsonObject) {
+rhit.bookViewPageAddBookAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/add-book',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
@@ -69,7 +71,7 @@ rhit.populateTable = function (books) {
 	});
 }
 
-rhit.indexPageGetBookAPI = async function () {
+rhit.bookViewPageGetBookAPI = async function () {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/get-books',
 		{
@@ -90,6 +92,11 @@ rhit.setControllers = function () {
 		console.log("You are on the indexPage");
 		new rhit.indexPageController();
 	}
+	else if (document.querySelector("#bookViewPage")){
+		console.log("You are on the bookViewPage");
+		new rhit.bookViewPageController();
+	}
+	
 }
 
 /* Main */

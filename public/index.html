@@ -12,58 +12,30 @@
 
 <body>
   <nav class="navbar navbar-dark fixed-top">
-    <a class="navbar-brand" href="#">Tome Tracker</a>
+    <a class="navbar-brand" href="/register">Register</a>
   </nav>
   <div id="indexPage" class="container page-container">
-    <div class="container text-center">
-      <div class="row align-items-start">
-        <div class="col">
-          <button type="button" id= "addBookButton" class="btn">Add Book</button>
-          <form>
-            <div class="row">
-              <div class="col">
-                <input type="text" id= "titleInput" class="form-control" placeholder="Title">
-              </div>
-              <div class="col">
-                <input type="text" id= "typeInput" class="form-control" placeholder="Book Type">
-              </div>
-              <div class="col">
-                <input type="text" id= "genreInput" class="form-control" placeholder="Genre">
-              </div>
-              <div class="col">
-                <input type="text" id= "isbnInput" class="form-control" placeholder="ISBN">
-              </div>
-              <div class="col">
-                <input type="text" id= "pubDateInput" class="form-control" placeholder="Published Date">
-              </div>
-              <div class="col">
-                <input type="text" id= "AuthorInput" class="form-control" placeholder="Author">
-              </div>
-            </div>
-          </form>
-        </div>
+
+    <form id="loginInput">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+          placeholder="Enter email">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
       </div>
-      <br>
-      <button type="button" id= "viewBookTableButton" class="btn">View Book Table</button>
-      <br>
-      <table class="table" id="bookTable">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Type</th>
-            <th scope="col">Genre</th>
-            <th scope="col">ISBN</th>
-            <th scope="col">Published Date</th>
-            <th scope="col">Author</th>
-          </tr>
-        </thead>
-        <!-- tbody is where the book table populates through the javascript -->
-        <tbody>
-        </tbody>
-      </table>
-      
-    </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      </div>
+      <div>
+        <button type="button" id="registerButton" class="btn btn-outline-primary btn-primary">Register</button>
+      </div>
+      <div>
+        <button type="button" id="alreadyRegisteredButton" class="btn btn-outline-primary btn-primary">Already Registered? Click here!</button>
+      </div>
+    </form>
+
+  </div>
 
   </div>
   <script src="scripts/jquery.min.js"></script>
