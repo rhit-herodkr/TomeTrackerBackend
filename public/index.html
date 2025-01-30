@@ -14,7 +14,7 @@
   <nav class="navbar navbar-dark fixed-top">
     <a class="navbar-brand" href="#">Tome Tracker</a>
   </nav>
-  <div id="mainPage" class="container page-container">
+  <div id="indexPage" class="container page-container">
     <div class="container text-center">
       <div class="row align-items-start">
         <div class="col">
@@ -44,9 +44,9 @@
         </div>
       </div>
       <br>
-      <button type="button" id= "viewBookTable" class="btn">View Book Table</button>
+      <button type="button" id= "viewBookTableButton" class="btn">View Book Table</button>
       <br>
-      <table class="table">
+      <table class="table" id="bookTable">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -58,35 +58,9 @@
             <th scope="col">Author</th>
           </tr>
         </thead>
+        
+        <!-- this is where the book table populates through the javascript -->
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <th id= "titleCol" scope="col"></th>
-            <th id= "tyoeCol" scope="col"></th>
-            <th id= "genreCol" scope="col"></th>
-            <th id= "isbnCol" scope="col"></th>
-            <th id= "pubDateCol" scope="col"></th>
-            <th id= "authCol" scope="col"></th>
-            <!-- have rows generated as you populate with books -->
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <th id= "titleCol" scope="col"></th>
-            <th id= "tyoeCol" scope="col"></th>
-            <th id= "genreCol" scope="col"></th>
-            <th id= "isbnCol" scope="col"></th>
-            <th id= "pubDateCol" scope="col"></th>
-            <th id= "authCol" scope="col"></th>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <th id= "titleCol" scope="col"></th>
-            <th id= "tyoeCol" scope="col"></th>
-            <th id= "genreCol" scope="col"></th>
-            <th id= "isbnCol" scope="col"></th>
-            <th id= "pubDateCol" scope="col"></th>
-            <th id= "authCol" scope="col"></th>
-          </tr>
         </tbody>
       </table>
       
