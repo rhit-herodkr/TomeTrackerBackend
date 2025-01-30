@@ -9,13 +9,60 @@
 /** namespace. */
 var rhit = rhit || {};
 
-rhit.indexPageController = function() {
+rhit.indexPageController = function () {
 	document.querySelector("#alreadyRegisteredButton").onclick = (event) => {
-		console.log("Redirecting to: /login.html");
+		// console.log("Redirecting to: /login.html");
 		window.location.href = "http://localhost:5000/login.html";
-		
+
 	};
-	console.log("index page active")
+	// console.log("index page active")
+}
+
+rhit.loginPageController = function () {
+	document.querySelector("#loginButton").onclick = async (event) => {
+		const loginPassword = document.querySelector("#passwordInput").value;
+		const loginEmail = document.querySelector("#emailInput").value;
+
+		const object = { loginEmail: loginEmail, loginPassword: loginPassword };
+		const jsonObject = JSON.stringify(object);
+		const success = await rhit.loginPageLoginMemberAPI(jsonObject);
+		if (success) {
+			console.log("success!!")
+			window.location.href = "http://localhost:5000/bookView.html";
+		} else {
+			alert("Login failed. Please check your credentials.");
+		}
+	};
+}
+
+rhit.loginPageLoginMemberAPI = async function (jsonObject) {
+	//Call the api that is created in api.js
+	try {
+		const response = await fetch('http://localhost:3000/api/login-member',
+			{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+		rhit.loginPageController = function () {
+			document.querySelector("#loginButton").onclick = async (event) => {
+				const loginPassword = document.querySelector("#passwordInput").value;
+				const loginEmail = document.querySelector("#emailInput").value;
+
+				const object = { loginEmail: loginEmail, loginPassword: loginPassword };
+				const jsonObject = JSON.stringify(object);
+
+				const success = await rhit.loginPageLoginMemberAPI(jsonObject);
+				if (success) {
+					console.log("success!!")
+					window.location.href = "http://localhost:5000/bookView.html";
+				} else {
+					alert("Login failed. Please check your credentials.");
+				}
+
+			};
+		}
+	}
+	catch {
+		console.error('Error logging in:', err);
+		return false;
+	}
 }
 
 /**
@@ -36,8 +83,8 @@ rhit.bookViewPageController = function () {
 		const isbn = document.querySelector("#isbnInput").value;
 		const pubDate = document.querySelector("#pubDateInput").value;
 		const author = document.querySelector("#AuthorInput").value;
-		
-		const object = {title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author};
+
+		const object = { title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author };
 		const jsonObject = JSON.stringify(object);
 		rhit.bookViewPageAddBookAPI(jsonObject);
 	}
@@ -47,6 +94,7 @@ rhit.bookViewPageAddBookAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/add-book',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	console.log("Book added successfully")
 }
 
 // Function to populate the books table
@@ -92,11 +140,15 @@ rhit.setControllers = function () {
 		console.log("You are on the indexPage");
 		new rhit.indexPageController();
 	}
-	else if (document.querySelector("#bookViewPage")){
+	else if (document.querySelector("#loginPage")) {
+		console.log("You are on the loginPage");
+		new rhit.loginPageController();
+	}
+	else if (document.querySelector("#bookViewPage")) {
 		console.log("You are on the bookViewPage");
 		new rhit.bookViewPageController();
 	}
-	
+
 }
 
 /* Main */
