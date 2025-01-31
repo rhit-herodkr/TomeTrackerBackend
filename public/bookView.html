@@ -34,7 +34,8 @@
                 <input type="text" id= "isbnInput" class="form-control" placeholder="ISBN">
               </div>
               <div class="col">
-                <input type="text" id= "pubDateInput" class="form-control" placeholder="Published Date">
+                <input type="date" id= "pubDateInput" class="form-control" placeholder="Published Date">
+                <small id="pubDateInput" class="form-text text-muted">Date the book was published</small>
               </div>
               <div class="col">
                 <input type="text" id= "AuthorInput" class="form-control" placeholder="Author">
@@ -45,6 +46,7 @@
       </div>
       <br>
       <button type="button" id= "viewBookTableButton" class="btn">View Book Table</button>
+      <button type="button" id= "clearBookTableButton" class="btn">Clear Book Table</button>
       <br>
       <table class="table" id="bookTable">
         <thead>

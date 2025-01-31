@@ -126,6 +126,8 @@ app.post('/api/add-book', async (req, res) => {
       + `@type = '${req.body.type}', @isbn = ${req.body.isbn}, `
       + `@author = '${req.body.author}', @title = '${req.body.title}'`);
 
+      res.json(result.recordset);
+
   } catch (err) {
     console.error('Error executing query:', err);
     res.status(500).send('Error executing query');

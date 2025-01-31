@@ -60,7 +60,6 @@ rhit.memberRegisterPage_Controller = function () {
 	document.querySelector("#registerButton").onclick = async (event) => {
 		const nameValue = document.querySelector("#nameInput").value;
 		const addressValue = document.querySelector("#addressInput").value;
-		// const dobValue = document.querySelector("#dobInput").value;
 		const dobValue = document.querySelector("#dobInput").value;
 		const loginEmail = document.querySelector("#emailInput").value;
 		const loginPassword = document.querySelector("#passwordInput").value;
@@ -108,8 +107,12 @@ rhit.bookViewPage_Controller = function () {
 		rhit.bookViewPage_PopulateTable(result);
 	};
 
+	document.querySelector("#clearBookTableButton").onclick = async (event) => {
+		rhit.bookViewPage_ClearTable();
+	};
+
 	//Implementation of addBookButton, takes in all of the inputs and passes them to the addBookAPI
-	document.querySelector("#addBookButton").onclick = (event) => {
+	document.querySelector("#addBookButton").onclick = async (event) => {
 		const title = document.querySelector("#titleInput").value;
 		const type = document.querySelector("#typeInput").value;
 		const genre = document.querySelector("#genreInput").value;
@@ -119,7 +122,15 @@ rhit.bookViewPage_Controller = function () {
 
 		const object = { title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author };
 		const jsonObject = JSON.stringify(object);
-		rhit.bookViewPage_AddBookAPI(jsonObject);
+		
+
+		var success = await rhit.bookViewPage_AddBookAPI(jsonObject);
+		if (success) {
+			alert("Book added successfully! Click View Book Table to update it!");
+		} else {
+			console.log("Add book failed.");
+
+		}
 	}
 };
 
@@ -127,6 +138,12 @@ rhit.bookViewPage_AddBookAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/add-book',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 // Function to populate the books table
@@ -149,6 +166,11 @@ rhit.bookViewPage_PopulateTable = function (books) {
 
 		tableBody.appendChild(row);
 	});
+}
+
+rhit.bookViewPage_ClearTable = function () {
+	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
 }
 
 rhit.bookViewPage_GetBookAPI = async function () {
