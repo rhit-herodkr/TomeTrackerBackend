@@ -200,6 +200,7 @@ rhit.headLibrarianPage_AddEmployeeAPI = async function (jsonObject) {
 rhit.bookViewPage_Controller = function () {
 	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
+		console.log("clicked")
 		const result = await rhit.bookViewPage_GetBookAPI();
 		rhit.bookViewPage_PopulateBookTable(result);
 	};
@@ -264,6 +265,37 @@ rhit.bookViewPage_Controller = function () {
 	document.querySelector("#clearReviewTableButton").onclick = async (event) => {
 		rhit.bookViewPage_ClearReviewTable();
 	};
+
+	document.querySelector("#checkoutBookButton").onclick = async (event) => {
+
+		const CardID = document.querySelector("#checkedoutcardIDInput").value;
+		const BookID = document.querySelector("#checkedoutbookIDInput").value;
+
+		// Create an object with the form data
+		const object = {
+			CardID: CardID,
+			BookID: BookID,
+		};
+		// Convert the object to a JSON string
+		const jsonObject = JSON.stringify(object);
+		var success = await rhit.bookViewPage_CheckOutAPI(jsonObject);
+		if (success) {
+			alert("Checked out successfully! Click View Checked Out Table to update it!");
+		} else {
+			console.log("Checked out failed.");
+		}
+	};
+}
+
+rhit.bookViewPage_CheckOutAPI = async function (jsonObject){
+	const response = await fetch('http://localhost:3000/api/checkout-book',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 rhit.bookViewPage_AddReviewAPI = async function (jsonObject) {
@@ -331,13 +363,13 @@ rhit.bookViewPage_PopulateBookTable = function (books) {
 	});
 }
 
-rhit.bookViewPage_PopulateReviewTable = function (reviews){
+rhit.bookViewPage_PopulateReviewTable = function (reviews) {
 	const tableBody = document.querySelector("#reviewTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
-	
+
 	reviews.forEach((review, index) => {
 		const row = document.createElement("tr");
-	
+
 		row.innerHTML = `
 			<th scope="row">${index + 1}</th>
 			<td>${review.MemberID}</td>
@@ -345,13 +377,13 @@ rhit.bookViewPage_PopulateReviewTable = function (reviews){
 			<td>${review.Description.trim()}</td>
 			<td>${review.Stars}</td>
 		`;
-	
+
 		tableBody.appendChild(row);
 	});
-	
+
 }
 
-rhit.bookViewPage_ClearReviewTable = function (){
+rhit.bookViewPage_ClearReviewTable = function () {
 	const tableBody = document.querySelector("#reviewTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 }
@@ -374,7 +406,7 @@ rhit.bookViewPage_GetBookAPI = async function () {
 
 }
 
-rhit.bookViewPage_GetReviewAPI = async function (){
+rhit.bookViewPage_GetReviewAPI = async function () {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/get-reviews',
 		{

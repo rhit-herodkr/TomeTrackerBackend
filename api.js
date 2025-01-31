@@ -228,6 +228,29 @@ app.post('/api/add-review', async (req, res) => {
   }
 });
 
+app.post('/api/checkout-book', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    // Run a stored procedure to insert the checkout record
+    let result = await TomeTrackerDB.request()
+      .input('BookID', sql.Int, req.body.BookID)
+      .input('CardID', sql.Int, req.body.CardID)
+      .query('EXEC CheckOutBook @BookID, @CardID');
+
+    // Send response back
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
+
 
 app.post('/api/add-employee', async (req, res) => {
   try {
