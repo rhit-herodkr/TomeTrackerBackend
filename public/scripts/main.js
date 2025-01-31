@@ -53,12 +53,12 @@ rhit.employeeLoginPage_Controller = function () {
 
 		var success = await rhit.employeeLoginPage_LoginEmployeeAPI(jsonObject);
 		if (success === 1) {
-			//window.location.href = "http://www.localhost:5000/bookView.html";
-			console.log("Login as headEmployee")
-		} else if (success === 0){
+			window.location.href = "http://www.localhost:5000/head-librarian-view.html";
+		} else if (success === 0) {
 			console.log("Login as normalEmployee");
+			//window.location.href = "http://www.localhost:5000/bookView.html";
 		}
-		else{
+		else {
 			console.log("Login failed.");
 		}
 	}
@@ -127,6 +127,48 @@ rhit.memberRegisterPage_Controller = function () {
 
 rhit.memberRegisterPage_RegisterMemberAPI = async function (jsonObject) {
 	const response = await fetch('http://localhost:3000/api/register-member',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+rhit.headLibrarianPage_Controller = function () {
+	document.querySelector("#addEmployeeButton").onclick = async (event) => {
+		const Name = document.querySelector("#nameInput").value;
+		const Address = document.querySelector("#addressInput").value;
+		const DOB = document.querySelector("#dobInput").value;
+		const Email = document.querySelector("#emailInput").value;
+		const Password = document.querySelector("#passwordInput").value;
+
+		const object = { Name: Name, Address: Address, DOB: DOB, Email: Email, Password: Password };
+		const jsonObject = JSON.stringify(object);
+
+		var success = await rhit.headLibrarianPage_AddEmployeeAPI(jsonObject);
+		if (success) {
+			alert("Employee added successfully! Click View Employee Table to update it!");
+		} else {
+			console.log("Add Employee failed.");
+
+		}
+	}
+
+	document.querySelector("#clearEmployeeTableButton").onclick = async (event) => {
+		rhit.headLibrarianPage_ClearTable();
+	};
+}
+
+rhit.headLibrarianPage_ClearTable = function () {
+	const tableBody = document.querySelector("#employeeTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
+}
+
+rhit.headLibrarianPage_AddEmployeeAPI = async function (jsonObject) {
+	//Call the api that is created in api.js
+	const response = await fetch('http://localhost:3000/api/add-employee',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
 	if (response.status == 200) {
 		return true;
@@ -240,6 +282,10 @@ rhit.setControllers = function () {
 	else if (document.querySelector("#employeeLoginPage")) {
 		console.log("You are on the employeeLoginPage");
 		new rhit.employeeLoginPage_Controller();
+	}
+	else if (document.querySelector("#headLibrarianPage")) {
+		console.log("You are on the headLibrarianPage");
+		new rhit.headLibrarianPage_Controller();
 	}
 	else if (document.querySelector("#memberRegisterPage")) {
 		console.log("You are on the memberRegisterPage");

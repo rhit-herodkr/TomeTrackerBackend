@@ -178,4 +178,30 @@ app.post('/api/add-book', async (req, res) => {
   }
 })
 
+app.post('/api/add-employee', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    // Run the stored procedure for adding an employee with parameterized SQL
+    let result = await TomeTrackerDB.request()
+      .input('Name', sql.VarChar, req.body.Name)
+      .input('Address', sql.VarChar, req.body.Address)
+      .input('DOB', sql.DateTime, req.body.DOB)
+      .input('Email', sql.VarChar, req.body.Email)
+      .input('Password', sql.VarChar, req.body.Password)
+      .execute('AddEmployee');  // Call the stored procedure
+
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
+
+
 app.listen(3000); // start Node + Express server on port 3000, where the api layer lives
