@@ -96,6 +96,10 @@ app.post('/api/login-member', async (req, res) => {
     // Run a stored procedure to select all books
     let result = await TomeTrackerDB.request().query(
       `EXEC LoginMember @email = '${req.body.loginEmail}', @password = '${req.body.loginPassword}'`);
+
+    // Send the result back as JSON
+      res.json(result.recordset);      
+
   } catch (err) {
     console.error('Error executing query:', err);
     res.status(500).send('Error executing query');
