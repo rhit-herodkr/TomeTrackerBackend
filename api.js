@@ -65,29 +65,6 @@ app.get('/api/get-books', async (req, res) => {
   }
 });
 
-app.post('/api/register-member', async (req, res) => {
-  try {
-    // Connect to the database
-    let TomeTrackerDB = await sql.connect(config);
-
-    // Run a stored procedure to select all books
-    let result = await TomeTrackerDB.request().query(
-      `EXEC RegisterMember 
-    @name = '${req.body.name}', 
-    @address = '${req.body.address}', 
-    @DOB = '${req.body.dob}', 
-    @email = '${req.body.email}', 
-    @password = '${req.body.password}'`);
-
-  } catch (err) {
-    console.error('Error executing query:', err);
-    res.status(500).send('Error executing query');
-  } finally {
-    // Close the SQL connection
-    await sql.close();
-  }
-})
-
 app.post('/api/login-member', async (req, res) => {
   try {
     // Connect to the database
@@ -118,7 +95,7 @@ app.post('/api/register-member', async (req, res) => {
     let request = TomeTrackerDB.request();
     request.input('name', sql.VarChar, req.body.nameValue);
     request.input('address', sql.VarChar, req.body.addressValue);
-    request.input('dob', sql.Date, req.body.dobValue);
+    request.input('dob', sql.VarChar, req.body.dobValue);
     request.input('email', sql.VarChar, req.body.loginEmail);
     request.input('password', sql.VarChar, req.body.loginPassword);
 

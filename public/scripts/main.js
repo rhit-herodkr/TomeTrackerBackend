@@ -60,21 +60,22 @@ rhit.memberRegisterPage_Controller = function () {
 	document.querySelector("#registerButton").onclick = async (event) => {
 		const nameValue = document.querySelector("#nameInput").value;
 		const addressValue = document.querySelector("#addressInput").value;
+		// const dobValue = document.querySelector("#dobInput").value;
 		const dobValue = document.querySelector("#dobInput").value;
 		const loginEmail = document.querySelector("#emailInput").value;
 		const loginPassword = document.querySelector("#passwordInput").value;
 
 		const object = {
-			loginEmail: loginEmail,
-			loginPassword: loginPassword,
 			nameValue: nameValue,
 			addressValue: addressValue,
-			dobValue: dobValue
+			dobValue: dobValue,
+			loginEmail: loginEmail,
+			loginPassword: loginPassword
 		};
 		console.log(object);
 
 		const jsonObject = JSON.stringify(object);
-		
+
 		var success = await rhit.memberRegisterPage_RegisterMemberAPI(jsonObject);
 		if (success) {
 			alert("Registration success! Please login now.");
@@ -87,8 +88,14 @@ rhit.memberRegisterPage_Controller = function () {
 }
 
 rhit.memberRegisterPage_RegisterMemberAPI = async function (jsonObject) {
-	const response = await fetch('http://localhost:3000',
+	const response = await fetch('http://localhost:3000/api/register-member',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 /**
