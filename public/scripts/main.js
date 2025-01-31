@@ -11,11 +11,8 @@ var rhit = rhit || {};
 
 rhit.indexPageController = function() {
 	document.querySelector("#alreadyRegisteredButton").onclick = (event) => {
-		// console.log("Redirecting to: /login.html");
 		window.location.href = "http://localhost:5000/login.html";
-		
 	};
-	// console.log("index page active")
 }
 
 rhit.loginPageController = function(){
