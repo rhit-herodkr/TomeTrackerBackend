@@ -285,9 +285,18 @@ rhit.bookViewPage_Controller = function () {
 			console.log("Checked out failed.");
 		}
 	};
+
+	document.querySelector("#viewCheckedOutTableButton").onclick = async (event) => {
+		const result = await rhit.bookViewPage_GetCheckedOutAPI();
+		rhit.bookViewPage_PopulateCheckedOutTable(result);
+	};
+
+	document.querySelector("#clearCheckedOutTableButton").onclick = async (event) => {
+		rhit.bookViewPage_ClearCheckedOutTable();
+	};
 }
 
-rhit.bookViewPage_CheckOutAPI = async function (jsonObject){
+rhit.bookViewPage_CheckOutAPI = async function (jsonObject) {
 	const response = await fetch('http://localhost:3000/api/checkout-book',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
 	if (response.status == 200) {
@@ -383,6 +392,26 @@ rhit.bookViewPage_PopulateReviewTable = function (reviews) {
 
 }
 
+rhit.bookViewPage_PopulateCheckedOutTable = function (checkedOut) {
+	const tableBody = document.querySelector("#checkedOutTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
+
+	checkedOut.forEach((checkedOut, index) => {
+		const row = document.createElement("tr");
+
+		row.innerHTML = `
+        <th scope="row">${index + 1}</th>
+        <td>${checkedOut.BookID}</td>
+        <td>${checkedOut.CardID}</td>
+        <td>${new Date(checkedOut.DateCheckedOut).toLocaleDateString()}</td>
+        <td>${checkedOut.DateReturned ? new Date(checkedOut.DateReturned).toLocaleDateString() : 'Not Returned'}</td>
+    `;
+
+		tableBody.appendChild(row);
+	});
+
+}
+
 rhit.bookViewPage_ClearReviewTable = function () {
 	const tableBody = document.querySelector("#reviewTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
@@ -390,6 +419,11 @@ rhit.bookViewPage_ClearReviewTable = function () {
 
 rhit.bookViewPage_ClearBookTable = function () {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
+}
+
+rhit.bookViewPage_ClearCheckedOutTable = function (){
+	const tableBody = document.querySelector("#checkedOutTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 }
 
@@ -409,6 +443,18 @@ rhit.bookViewPage_GetBookAPI = async function () {
 rhit.bookViewPage_GetReviewAPI = async function () {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/get-reviews',
+		{
+			method: 'GET', headers: {
+				'Content-Type':
+					'application/json'
+			}
+		});
+	return await response.json();
+}
+
+rhit.bookViewPage_GetCheckedOutAPI = async function () {
+	//Call the api that is created in api.js
+	const response = await fetch('http://localhost:3000/api/get-checkedout',
 		{
 			method: 'GET', headers: {
 				'Content-Type':
