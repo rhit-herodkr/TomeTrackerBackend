@@ -81,7 +81,8 @@
                                     <input type="number" id="bookIDInput" class="form-control" placeholder="Book ID">
                                 </div>
                                 <div class="col">
-                                    <input type="text" id="descriptionInput" class="form-control" placeholder="Description">
+                                    <input type="text" id="descriptionInput" class="form-control"
+                                        placeholder="Description">
                                 </div>
                                 <div class="col">
                                     <input type="number" id="starsInput" class="form-control" placeholder="Rating (1-5)"
@@ -92,8 +93,26 @@
 
                     </div>
                 </div>
-
             </div>
+            <br>
+            <button type="button" id="viewReviewTableButton" class="btn">View Review Table</button>
+            <button type="button" id="clearReviewTableButton" class="btn">Clear Review Table</button>
+            <br>
+            <table class="table" id="reviewTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Member ID</th>
+                        <th scope="col">Book ID</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Stars</th>
+                    </tr>
+                </thead>
+                <!-- tbody is where the review table populates through the javascript -->
+                <tbody>
+                </tbody>
+            </table>
+
 
         </div>
         <script src="scripts/jquery.min.js"></script>

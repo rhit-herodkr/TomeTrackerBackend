@@ -201,11 +201,11 @@ rhit.bookViewPage_Controller = function () {
 	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
 		const result = await rhit.bookViewPage_GetBookAPI();
-		rhit.bookViewPage_PopulateTable(result);
+		rhit.bookViewPage_PopulateBookTable(result);
 	};
 
 	document.querySelector("#clearBookTableButton").onclick = async (event) => {
-		rhit.bookViewPage_ClearTable();
+		rhit.bookViewPage_ClearBookTable();
 	};
 
 	//Implementation of addBookButton, takes in all of the inputs and passes them to the addBookAPI
@@ -254,7 +254,15 @@ rhit.bookViewPage_Controller = function () {
 			console.log("Add review failed.");
 
 		}
+	};
 
+	document.querySelector("#viewReviewTableButton").onclick = async (event) => {
+		const result = await rhit.bookViewPage_GetReviewAPI();
+		rhit.bookViewPage_PopulateReviewTable(result);
+	};
+
+	document.querySelector("#clearReviewTableButton").onclick = async (event) => {
+		rhit.bookViewPage_ClearReviewTable();
 	};
 }
 
@@ -302,7 +310,7 @@ rhit.headLibrarianPage_PopulateTable = function (employees) {
 	});
 }
 // Function to populate the books table
-rhit.bookViewPage_PopulateTable = function (books) {
+rhit.bookViewPage_PopulateBookTable = function (books) {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 
@@ -323,7 +331,32 @@ rhit.bookViewPage_PopulateTable = function (books) {
 	});
 }
 
-rhit.bookViewPage_ClearTable = function () {
+rhit.bookViewPage_PopulateReviewTable = function (reviews){
+	const tableBody = document.querySelector("#reviewTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
+	
+	reviews.forEach((review, index) => {
+		const row = document.createElement("tr");
+	
+		row.innerHTML = `
+			<th scope="row">${index + 1}</th>
+			<td>${review.MemberID}</td>
+			<td>${review.BookID}</td>
+			<td>${review.Description.trim()}</td>
+			<td>${review.Stars}</td>
+		`;
+	
+		tableBody.appendChild(row);
+	});
+	
+}
+
+rhit.bookViewPage_ClearReviewTable = function (){
+	const tableBody = document.querySelector("#reviewTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
+}
+
+rhit.bookViewPage_ClearBookTable = function () {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 }
@@ -341,6 +374,17 @@ rhit.bookViewPage_GetBookAPI = async function () {
 
 }
 
+rhit.bookViewPage_GetReviewAPI = async function (){
+	//Call the api that is created in api.js
+	const response = await fetch('http://localhost:3000/api/get-reviews',
+		{
+			method: 'GET', headers: {
+				'Content-Type':
+					'application/json'
+			}
+		});
+	return await response.json();
+}
 /**
  * Determines what page you are on.
  */

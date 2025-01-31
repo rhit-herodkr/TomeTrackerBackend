@@ -85,6 +85,26 @@ app.get('/api/get-employees', async (req, res) => {
   }
 });
 
+app.get('/api/get-reviews', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    // Run a stored procedure to select all books
+    let result = await TomeTrackerDB.request().query('EXEC ReadReviewsTable');
+
+    // Send the result back as JSON
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
+
 app.post('/api/login-member', async (req, res) => {
   try {
     // Connect to the database
