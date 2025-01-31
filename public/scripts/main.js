@@ -137,6 +137,15 @@ rhit.memberRegisterPage_RegisterMemberAPI = async function (jsonObject) {
 }
 
 rhit.headLibrarianPage_Controller = function () {
+	document.querySelector("#viewEmployeeTableButton").onclick = async (event) => {
+		const result = await rhit.headLibrarianPage_GetEmployeeAPI();
+		rhit.headLibrarianPage_PopulateTable(result);
+	};
+
+	document.querySelector("#clearEmployeeTableButton").onclick = async (event) => {
+		rhit.headLibrarianPage_ClearTable();
+	};
+
 	document.querySelector("#addEmployeeButton").onclick = async (event) => {
 		const Name = document.querySelector("#nameInput").value;
 		const Address = document.querySelector("#addressInput").value;
@@ -155,10 +164,17 @@ rhit.headLibrarianPage_Controller = function () {
 
 		}
 	}
+}
 
-	document.querySelector("#clearEmployeeTableButton").onclick = async (event) => {
-		rhit.headLibrarianPage_ClearTable();
-	};
+rhit.headLibrarianPage_GetEmployeeAPI = async function () {
+	const response = await fetch('http://localhost:3000/api/get-employees',
+		{
+			method: 'GET', headers: {
+				'Content-Type':
+					'application/json'
+			}
+		});
+	return await response.json();
 }
 
 rhit.headLibrarianPage_ClearTable = function () {
@@ -226,7 +242,28 @@ rhit.bookViewPage_AddBookAPI = async function (jsonObject) {
 		return false;
 	}
 }
+rhit.headLibrarianPage_PopulateTable = function (employees) {
+	const tableBody = document.querySelector("#employeeTable tbody"); // Select table body
+	tableBody.innerHTML = ""; // Clear existing rows
 
+	employees.forEach((employee, index) => {
+		const row = document.createElement("tr");
+
+		row.innerHTML = `
+      <th scope="row">${index + 1}</th>
+      <td>${employee.PersonID}</td>
+      <td>${employee.Name.trim()}</td>
+      <td>${employee.Address}</td>
+      <td>${new Date(employee.DOB).toLocaleDateString()}</td>
+      <td>${employee.Email}</td>
+      <td>${employee.Password}</td>
+      <td>${employee.EmployeeID}</td>
+      <td>${employee.isHeadLibrarian === 1 ? 'Yes' : 'No'}</td>
+    `;
+
+		tableBody.appendChild(row);
+	});
+}
 // Function to populate the books table
 rhit.bookViewPage_PopulateTable = function (books) {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body

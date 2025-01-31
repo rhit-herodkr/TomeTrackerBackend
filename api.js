@@ -65,6 +65,26 @@ app.get('/api/get-books', async (req, res) => {
   }
 });
 
+app.get('/api/get-employees', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    // Run a stored procedure to select all books
+    let result = await TomeTrackerDB.request().query('EXEC ReadEmployeesTable');
+
+    // Send the result back as JSON
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
+
 app.post('/api/login-member', async (req, res) => {
   try {
     // Connect to the database
@@ -91,21 +111,7 @@ app.post('/api/login-employee', async (req, res) => {
     // Connect to the database
     let TomeTrackerDB = await sql.connect(config);
 
-    //   // Run a stored procedure to select all books
-    //   let result = await TomeTrackerDB.request().query(
-    //     `EXEC LoginEmployee @email = '${req.body.loginEmail}', @password = '${req.body.loginPassword}'`);
-
-    //   // Send the result back as JSON
-    //     res.json(result.recordset);      
-
-    // } catch (err) {
-    //   console.error('Error executing query:', err);
-    //   res.status(500).send('Error executing query');
-    // } finally {
-    //   // Close the SQL connection
-    //   await sql.close();
-    // }
-    // })        // Run the stored procedure and get the result
+    // Run the stored procedure and get the result
     let result = await TomeTrackerDB.request()
       .input('email', sql.VarChar, req.body.loginEmail)
       .input('password', sql.VarChar, req.body.loginPassword)
@@ -187,7 +193,7 @@ app.post('/api/add-employee', async (req, res) => {
     let result = await TomeTrackerDB.request()
       .input('Name', sql.VarChar, req.body.Name)
       .input('Address', sql.VarChar, req.body.Address)
-      .input('DOB', sql.DateTime, req.body.DOB)
+      .input('DOB', sql.VarChar, req.body.DOB)
       .input('Email', sql.VarChar, req.body.Email)
       .input('Password', sql.VarChar, req.body.Password)
       .execute('AddEmployee');  // Call the stored procedure
