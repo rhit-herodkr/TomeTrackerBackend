@@ -101,7 +101,15 @@ rhit.memberRegisterPage_Controller = function () {
 		const addressValue = document.querySelector("#addressInput").value;
 		const dobValue = document.querySelector("#dobInput").value;
 		const loginEmail = document.querySelector("#emailInput").value;
+		if (!loginEmail) {
+			alert("Email cannot be empty.");
+			return; // Stops further execution
+		}
 		const loginPassword = document.querySelector("#passwordInput").value;
+		if (!loginPassword) {
+			alert("Password cannot be empty.");
+			return; // Stops further execution
+		}
 
 		const object = {
 			nameValue: nameValue,
@@ -237,6 +245,7 @@ rhit.bookViewPage_Controller = function () {
 		const bookID = document.querySelector("#bookIDInput").value;
 		const desc = document.querySelector("#descriptionInput").value;
 		const stars = document.querySelector("#starsInput").value;
+		
 
 		// Create an object with the form data
 		const object = {
