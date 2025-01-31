@@ -14,7 +14,7 @@ rhit.indexPage_Controller = function () {
 		window.location.href = "http://localhost:5000/member-login.html";
 	};
 	document.querySelector("#employeeButton").onclick = (event) => {
-		//window.location.href = "http://localhost:5000/employee-login.html";
+		window.location.href = "http://localhost:5000/employee-login.html";
 	};
 }
 
@@ -40,6 +40,45 @@ rhit.memberLoginPage_Controller = function () {
 	document.querySelector("#registerButton").onclick = async (event) => {
 		window.location.href = "http://www.localhost:5000/register-member.html";
 	};
+}
+
+rhit.employeeLoginPage_Controller = function () {
+	document.querySelector("#loginButton").onclick = async (event) => {
+		const loginPassword = document.querySelector("#passwordInput").value;
+		const loginEmail = document.querySelector("#emailInput").value;
+
+		const object = { loginEmail: loginEmail, loginPassword: loginPassword };
+		const jsonObject = JSON.stringify(object);
+
+
+		var success = await rhit.employeeLoginPage_LoginEmployeeAPI(jsonObject);
+		if (success === 1) {
+			//window.location.href = "http://www.localhost:5000/bookView.html";
+			console.log("Login as headEmployee")
+		} else if (success === 0){
+			console.log("Login as normalEmployee");
+		}
+		else{
+			console.log("Login failed.");
+		}
+	}
+}
+
+rhit.employeeLoginPage_LoginEmployeeAPI = async function (jsonObject) {
+	const response = await fetch('http://localhost:3000/api/login-employee',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+
+	console.log(response)
+
+	// Check if response status is 200 (success)
+	if (response.status === 200) {
+		const data = await response.json();
+		console.log('isHeadLibrarian:', data.isHeadLibrarian);
+		return data.isHeadLibrarian;
+	} else {
+		console.error('Login failed with status:', response.status);
+		return;
+	}
 }
 
 rhit.memberLoginPage_LoginMemberAPI = async function (jsonObject) {
@@ -122,7 +161,7 @@ rhit.bookViewPage_Controller = function () {
 
 		const object = { title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author };
 		const jsonObject = JSON.stringify(object);
-		
+
 
 		var success = await rhit.bookViewPage_AddBookAPI(jsonObject);
 		if (success) {
@@ -197,6 +236,10 @@ rhit.setControllers = function () {
 	else if (document.querySelector("#memberLoginPage")) {
 		console.log("You are on the memberLoginPage");
 		new rhit.memberLoginPage_Controller();
+	}
+	else if (document.querySelector("#employeeLoginPage")) {
+		console.log("You are on the employeeLoginPage");
+		new rhit.employeeLoginPage_Controller();
 	}
 	else if (document.querySelector("#memberRegisterPage")) {
 		console.log("You are on the memberRegisterPage");

@@ -75,7 +75,7 @@ app.post('/api/login-member', async (req, res) => {
       `EXEC LoginMember @email = '${req.body.loginEmail}', @password = '${req.body.loginPassword}'`);
 
     // Send the result back as JSON
-      res.json(result.recordset);      
+    res.json(result.recordset);
 
   } catch (err) {
     console.error('Error executing query:', err);
@@ -85,6 +85,47 @@ app.post('/api/login-member', async (req, res) => {
     await sql.close();
   }
 })
+
+app.post('/api/login-employee', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    //   // Run a stored procedure to select all books
+    //   let result = await TomeTrackerDB.request().query(
+    //     `EXEC LoginEmployee @email = '${req.body.loginEmail}', @password = '${req.body.loginPassword}'`);
+
+    //   // Send the result back as JSON
+    //     res.json(result.recordset);      
+
+    // } catch (err) {
+    //   console.error('Error executing query:', err);
+    //   res.status(500).send('Error executing query');
+    // } finally {
+    //   // Close the SQL connection
+    //   await sql.close();
+    // }
+    // })        // Run the stored procedure and get the result
+    let result = await TomeTrackerDB.request()
+      .input('email', sql.VarChar, req.body.loginEmail)
+      .input('password', sql.VarChar, req.body.loginPassword)
+      .query('EXEC LoginEmployee @email, @password');
+
+    // Send the result back as JSON
+    if (result.recordset && result.recordset.length > 0) {
+      const isHeadLibrarian = result.recordset[0].isHeadLibrarian;
+      res.json({ isHeadLibrarian }); // Send the result as a JSON response
+    } else {
+      res.status(401).send('Login failed');
+    }
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
 
 app.post('/api/register-member', async (req, res) => {
   try {
@@ -126,7 +167,7 @@ app.post('/api/add-book', async (req, res) => {
       + `@type = '${req.body.type}', @isbn = ${req.body.isbn}, `
       + `@author = '${req.body.author}', @title = '${req.body.title}'`);
 
-      res.json(result.recordset);
+    res.json(result.recordset);
 
   } catch (err) {
     console.error('Error executing query:', err);
