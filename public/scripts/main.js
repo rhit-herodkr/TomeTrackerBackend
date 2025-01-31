@@ -9,7 +9,7 @@
 /** namespace. */
 var rhit = rhit || {};
 
-rhit.indexPageController = function() {
+rhit.indexPage_Controller = function () {
 	document.querySelector("#memberButton").onclick = (event) => {
 		window.location.href = "http://localhost:5000/member-login.html";
 	};
@@ -18,16 +18,16 @@ rhit.indexPageController = function() {
 	};
 }
 
-rhit.memberLoginPageController = function(){
+rhit.memberLoginPage_Controller = function () {
 	document.querySelector("#loginButton").onclick = async (event) => {
 		const loginPassword = document.querySelector("#passwordInput").value;
 		const loginEmail = document.querySelector("#emailInput").value;
-				
-		const object = {loginEmail: loginEmail, loginPassword: loginPassword};
+
+		const object = { loginEmail: loginEmail, loginPassword: loginPassword };
 		const jsonObject = JSON.stringify(object);
 
 
-		var success = await rhit.memberLoginPageLoginMemberAPI(jsonObject);
+		var success = await rhit.memberLoginPage_LoginMemberAPI(jsonObject);
 		if (success) {
 			console.log("Success!")
 			window.location.href = "http://www.localhost:5000/bookView.html";
@@ -42,27 +42,63 @@ rhit.memberLoginPageController = function(){
 	};
 }
 
-rhit.memberLoginPageLoginMemberAPI = async function (jsonObject) {
+rhit.memberLoginPage_LoginMemberAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/login-member',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
 
-		//Response status means 200 is success
-		if (response.status == 200){
-			return true;
-		}
-		else{
-			return false;
-		}
+	//Response status means 200 is success
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
+
+rhit.memberRegisterPage_Controller = function () {
+	document.querySelector("#registerButton").onclick = async (event) => {
+		const nameValue = document.querySelector("#nameInput").value;
+		const addressValue = document.querySelector("#addressInput").value;
+		const dobValue = document.querySelector("#dobInput").value;
+		const loginEmail = document.querySelector("#emailInput").value;
+		const loginPassword = document.querySelector("#passwordInput").value;
+
+		const object = {
+			loginEmail: loginEmail,
+			loginPassword: loginPassword,
+			nameValue: nameValue,
+			addressValue: addressValue,
+			dobValue: dobValue
+		};
+		console.log(object);
+
+		const jsonObject = JSON.stringify(object);
+		
+		var success = await rhit.memberRegisterPage_RegisterMemberAPI(jsonObject);
+		if (success) {
+			alert("Registration success! Please login now.");
+			window.location.href = "http://www.localhost:5000/member-login.html";
+		} else {
+			console.log("Registration failed.");
+
+		}
+	}
+}
+
+rhit.memberRegisterPage_RegisterMemberAPI = async function (jsonObject) {
+	const response = await fetch('http://localhost:3000',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+}
+
 /**
  * The main driver of the bookViewPage. Able to add and view books
  */
-rhit.bookViewPageController = function () {
+rhit.bookViewPage_Controller = function () {
 	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
-		const result = await rhit.bookViewPageGetBookAPI();
-		rhit.bookViewPagePopulateTable(result);
+		const result = await rhit.bookViewPage_GetBookAPI();
+		rhit.bookViewPage_PopulateTable(result);
 	};
 
 	//Implementation of addBookButton, takes in all of the inputs and passes them to the addBookAPI
@@ -73,22 +109,21 @@ rhit.bookViewPageController = function () {
 		const isbn = document.querySelector("#isbnInput").value;
 		const pubDate = document.querySelector("#pubDateInput").value;
 		const author = document.querySelector("#AuthorInput").value;
-		
-		const object = {title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author};
+
+		const object = { title: title, type: type, genre: genre, isbn: isbn, pubDate: pubDate, author: author };
 		const jsonObject = JSON.stringify(object);
-		rhit.bookViewPageAddBookAPI(jsonObject);
+		rhit.bookViewPage_AddBookAPI(jsonObject);
 	}
 };
 
-rhit.bookViewPageAddBookAPI = async function (jsonObject) {
+rhit.bookViewPage_AddBookAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/add-book',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
-	console.log("Book added successfully")
 }
 
 // Function to populate the books table
-rhit.bookViewPagePopulateTable = function (books) {
+rhit.bookViewPage_PopulateTable = function (books) {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 
@@ -109,7 +144,7 @@ rhit.bookViewPagePopulateTable = function (books) {
 	});
 }
 
-rhit.bookViewPageGetBookAPI = async function () {
+rhit.bookViewPage_GetBookAPI = async function () {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/get-books',
 		{
@@ -128,21 +163,21 @@ rhit.bookViewPageGetBookAPI = async function () {
 rhit.setControllers = function () {
 	if (document.querySelector("#indexPage")) {
 		console.log("You are on the indexPage");
-		new rhit.indexPageController();
+		new rhit.indexPage_Controller();
 	}
-	else if (document.querySelector("#memberLoginPage")){
+	else if (document.querySelector("#memberLoginPage")) {
 		console.log("You are on the memberLoginPage");
-		new rhit.memberLoginPageController();
+		new rhit.memberLoginPage_Controller();
 	}
-	else if (document.querySelector("#memberRegisterPage")){
+	else if (document.querySelector("#memberRegisterPage")) {
 		console.log("You are on the memberRegisterPage");
-		//new rhit.memberLoginPageController();
+		new rhit.memberRegisterPage_Controller();
 	}
-	else if (document.querySelector("#bookViewPage")){
+	else if (document.querySelector("#bookViewPage")) {
 		console.log("You are on the bookViewPage");
-		new rhit.bookViewPageController();
+		new rhit.bookViewPage_Controller();
 	}
-	
+
 }
 
 /* Main */
