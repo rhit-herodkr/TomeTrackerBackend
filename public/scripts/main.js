@@ -10,12 +10,12 @@
 var rhit = rhit || {};
 
 rhit.indexPageController = function() {
-	document.querySelector("#alreadyRegisteredButton").onclick = (event) => {
-		window.location.href = "http://localhost:5000/login.html";
+	document.querySelector("#memberButton").onclick = (event) => {
+		window.location.href = "http://localhost:5000/member-login.html";
 	};
 }
 
-rhit.loginPageController = function(){
+rhit.memberLoginPageController = function(){
 	document.querySelector("#loginButton").onclick = async (event) => {
 		const loginPassword = document.querySelector("#passwordInput").value;
 		const loginEmail = document.querySelector("#emailInput").value;
@@ -24,7 +24,7 @@ rhit.loginPageController = function(){
 		const jsonObject = JSON.stringify(object);
 
 
-		var success = await rhit.loginPageLoginMemberAPI(jsonObject);
+		var success = await rhit.loginMemberAPI(jsonObject);
 		if (success) {
 			console.log("Success!")
 			window.location.href = "http://www.localhost:5000/bookView.html";
@@ -35,7 +35,7 @@ rhit.loginPageController = function(){
 	};
 }
 
-rhit.loginPageLoginMemberAPI = async function (jsonObject) {
+rhit.loginMemberAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/login-member',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
@@ -122,6 +122,10 @@ rhit.setControllers = function () {
 	if (document.querySelector("#indexPage")) {
 		console.log("You are on the indexPage");
 		new rhit.indexPageController();
+	}
+	else if (document.querySelector("#memberLoginPage")){
+		console.log("You are on the memberLoginPage");
+		new rhit.memberLoginPageController();
 	}
 	else if (document.querySelector("#loginPage")){
 		console.log("You are on the loginPage");
