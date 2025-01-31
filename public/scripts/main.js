@@ -13,6 +13,9 @@ rhit.indexPageController = function() {
 	document.querySelector("#memberButton").onclick = (event) => {
 		window.location.href = "http://localhost:5000/member-login.html";
 	};
+	document.querySelector("#employeeButton").onclick = (event) => {
+		//window.location.href = "http://localhost:5000/employee-login.html";
+	};
 }
 
 rhit.memberLoginPageController = function(){
@@ -24,7 +27,7 @@ rhit.memberLoginPageController = function(){
 		const jsonObject = JSON.stringify(object);
 
 
-		var success = await rhit.loginMemberAPI(jsonObject);
+		var success = await rhit.memberLoginPageLoginMemberAPI(jsonObject);
 		if (success) {
 			console.log("Success!")
 			window.location.href = "http://www.localhost:5000/bookView.html";
@@ -33,9 +36,13 @@ rhit.memberLoginPageController = function(){
 
 		}
 	};
+
+	document.querySelector("#registerButton").onclick = async (event) => {
+		window.location.href = "http://www.localhost:5000/register-member.html";
+	};
 }
 
-rhit.loginMemberAPI = async function (jsonObject) {
+rhit.memberLoginPageLoginMemberAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
 	const response = await fetch('http://localhost:3000/api/login-member',
 		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
@@ -55,7 +62,7 @@ rhit.bookViewPageController = function () {
 	//Implementation of the viewBookTableButton, gets JSON and sends it to the populateTable function
 	document.querySelector("#viewBookTableButton").onclick = async (event) => {
 		const result = await rhit.bookViewPageGetBookAPI();
-		rhit.populateTable(result);
+		rhit.bookViewPagePopulateTable(result);
 	};
 
 	//Implementation of addBookButton, takes in all of the inputs and passes them to the addBookAPI
@@ -81,7 +88,7 @@ rhit.bookViewPageAddBookAPI = async function (jsonObject) {
 }
 
 // Function to populate the books table
-rhit.populateTable = function (books) {
+rhit.bookViewPagePopulateTable = function (books) {
 	const tableBody = document.querySelector("#bookTable tbody"); // Select table body
 	tableBody.innerHTML = ""; // Clear existing rows
 
@@ -127,9 +134,9 @@ rhit.setControllers = function () {
 		console.log("You are on the memberLoginPage");
 		new rhit.memberLoginPageController();
 	}
-	else if (document.querySelector("#loginPage")){
-		console.log("You are on the loginPage");
-		new rhit.loginPageController();
+	else if (document.querySelector("#memberRegisterPage")){
+		console.log("You are on the memberRegisterPage");
+		//new rhit.memberLoginPageController();
 	}
 	else if (document.querySelector("#bookViewPage")){
 		console.log("You are on the bookViewPage");
