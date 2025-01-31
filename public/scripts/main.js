@@ -229,7 +229,45 @@ rhit.bookViewPage_Controller = function () {
 
 		}
 	}
-};
+
+	document.querySelector("#reviewBookButton").onclick = async (event) => {
+
+		const memberID = document.querySelector("#memberIDInput").value;
+		const bookID = document.querySelector("#bookIDInput").value;
+		const desc = document.querySelector("#descriptionInput").value;
+		const stars = document.querySelector("#starsInput").value;
+
+		// Create an object with the form data
+		const object = {
+			memberID: memberID,
+			bookID: bookID,
+			desc: desc,
+			stars: stars
+		};
+
+		// Convert the object to a JSON string
+		const jsonObject = JSON.stringify(object);
+		var success = await rhit.bookViewPage_AddReviewAPI(jsonObject);
+		if (success) {
+			alert("Review added successfully! Click View Review Table to update it!");
+		} else {
+			console.log("Add review failed.");
+
+		}
+
+	};
+}
+
+rhit.bookViewPage_AddReviewAPI = async function (jsonObject) {
+	const response = await fetch('http://localhost:3000/api/add-review',
+		{ method: 'POST', body: jsonObject, headers: { 'Content-Type': 'application/json' } });
+	if (response.status == 200) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
 
 rhit.bookViewPage_AddBookAPI = async function (jsonObject) {
 	//Call the api that is created in api.js
@@ -260,7 +298,6 @@ rhit.headLibrarianPage_PopulateTable = function (employees) {
       <td>${employee.EmployeeID}</td>
       <td>${employee.isHeadLibrarian === 1 ? 'Yes' : 'No'}</td>
     `;
-
 		tableBody.appendChild(row);
 	});
 }

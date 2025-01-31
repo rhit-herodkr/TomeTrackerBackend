@@ -90,7 +90,6 @@ app.post('/api/login-member', async (req, res) => {
     // Connect to the database
     let TomeTrackerDB = await sql.connect(config);
 
-    // Run a stored procedure to select all books
     let result = await TomeTrackerDB.request().query(
       `EXEC LoginMember @email = '${req.body.loginEmail}', @password = '${req.body.loginPassword}'`);
 
@@ -183,6 +182,32 @@ app.post('/api/add-book', async (req, res) => {
     await sql.close();
   }
 })
+
+app.post('/api/add-review', async (req, res) => {
+  try {
+    // Connect to the database
+    let TomeTrackerDB = await sql.connect(config);
+
+    // Run a stored procedure to insert the review
+    let result = await TomeTrackerDB.request()
+      .input('memberID', sql.Int, req.body.memberID)
+      .input('bookID', sql.Int, req.body.bookID)
+      .input('desc', sql.VarChar(1500), req.body.desc)
+      .input('stars', sql.Int, req.body.stars)
+      .query('EXEC AddReview @memberID, @bookID, @desc, @stars');
+
+    // Send response back
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.error('Error executing query:', err);
+    res.status(500).send('Error executing query');
+  } finally {
+    // Close the SQL connection
+    await sql.close();
+  }
+});
+
 
 app.post('/api/add-employee', async (req, res) => {
   try {
